@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import EmpService from "../services/OrdService";
+import EmpService from "../services/EmpService";
 
 
 const AddEmp = () => {
@@ -55,6 +55,7 @@ const AddEmp = () => {
 
   return (
     <div className="submit-form">
+       <h4>Add Employee</h4>
       {submitted ? (
         <div>
           <h4>You submitted successfully!</h4>

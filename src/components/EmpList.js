@@ -1,69 +1,86 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import OrdService from "../services/OrdService";
+import EmpService from "../services/EmpService";
 import { useTable } from "react-table";
 
-const OrdList = (props) => {
-  const [ords, setOrds] = useState([]);
-  const ordRef = useRef();
+const EmpList = (props) => {
+  const [emps, setEmps] = useState([]);
+  const empRef = useRef();
 
-  ordRef.current = ords;
+  empRef.current = emps;
 
   useEffect(() => {
-    retrieveOrds();
+    retrieveEmps();
   }, []);
 
-  const retrieveOrds = () => {
-    OrdService.getAll()
+  const retrieveEmps = () => {
+    EmpService.getAll()
       .then((response) => {
         console.log("API response: ", JSON.stringify(response));
-        setOrds(response.data);
+        setEmps(response.data);
       })
       .catch((e) => {
         console.log(e);
       });
   };
   
-  const openOrd = (rowIndex) => {
-    const id = ordRef.current[rowIndex].Id;
+  const openEmp = (rowIndex) => {
+    const id = empRef.current[rowIndex].Id;
     console.log("id is : ", id);
-    props.history.push("/ord/" + id);
+    props.history.push("/emp/" + id);
+  };
+  const deleteEmp = (rowIndex) => {
+    const id = empRef.current[rowIndex].emp_id;
+
+    EmpService.remove(id)
+      .then((response) => {
+        props.history.push("/emp");
+
+        let newEmp = [...empRef.current];
+        newEmp.splice(rowIndex, 1);
+
+        setEmps(newEmp);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
   const columns = useMemo(
     () => [
       {
-        Header: "Order ID",
-        accessor: "OrderNumber",
+        Header: "Employee ID",
+        accessor: "emp_id",
       },
       {
-        Header: "Order Total",
-        accessor: "OrderTotal",
+        Header: "Employee Name",
+        accessor: "emp_name",
       },
       {
-        Header: "Customer Name",
-        accessor: "CustomerFirstName",
+        Header: "Department Name",
+        accessor: "dept_name",
       },
       {
-        Header: "Customer Email",
-        accessor: "CustomerEmail",
+        Header: "Department Id",
+        accessor: "dept_id",
       },
       {
-        Header: "Currency Used",
-        accessor: "Currency",
+        Header: "Employee Contact",
+        accessor: "emp_phn",
       },
+      
       {
-        Header: "Order Date",
-        accessor: "CreatedAt",
-      },
-      {
-        Header: "Update Shipment Status",
+        Header: "Update Employee Information",
         accessor: "actions",
         Cell: (props) => {
           const rowIdx = props.row.id;
           return (
             <div>
-              <span onClick={() => openOrd(rowIdx)}>
+              <span onClick={() => openEmp(rowIdx)}>
                 <i className="far fa-edit action mr-2"></i>
+              </span>
+
+              <span onClick={() => deleteEmp(rowIdx)}>
+                <i className="fas fa-trash action"></i>
               </span>
             </div>
           );
@@ -81,7 +98,7 @@ const OrdList = (props) => {
     prepareRow,
   } = useTable({
     columns,
-    data: ords,
+    data: emps,
   });
 
   return (
@@ -122,4 +139,4 @@ const OrdList = (props) => {
   );
 };
 
-export default OrdList;
+export default EmpList;
