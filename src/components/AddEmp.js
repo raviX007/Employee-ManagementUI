@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import EmpService from "../services/EmpService";
 
 
-const AddEmp = () => {
+const AddEmp = (props) => {
   const initialEmpState = {
     emp_id: null,
     emp_name: "",
@@ -41,6 +41,8 @@ const AddEmp = () => {
   
         });
         setSubmitted(true);
+        alert("User Added");
+        props.history.push("/emp");
         console.log(response.data);
       })
       .catch(e => {

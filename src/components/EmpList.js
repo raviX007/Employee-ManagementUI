@@ -16,6 +16,7 @@ const EmpList = (props) => {
     EmpService.getAll()
       .then((response) => {
         console.log("API response: ", JSON.stringify(response));
+        const sortedEmps = response.data.sort((a, b) => a.emp_id - b.emp_id);
         setEmps(response.data);
       })
       .catch((e) => {

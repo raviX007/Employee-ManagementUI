@@ -44,6 +44,8 @@ const Emp = props => {
       .then(response => {
         console.log(response.data);
         setMessage("The Employee Information was updated successfully!");
+        alert(setMessage);
+        props.history.push("/emp");
       })
       .catch(e => {
         console.log(e);
